@@ -206,6 +206,10 @@ export abstract class AbstractCursor<
     return this[kKilled];
   }
 
+  get loadBalanced(): boolean {
+    return this[kTopology].loadBalanced;
+  }
+
   /** Returns current buffered documents length */
   bufferedCount(): number {
     return this[kDocuments].length;
@@ -649,7 +653,11 @@ function next<T>(cursor: AbstractCursor, blocking: boolean, callback: Callback<T
   if (cursorId == null) {
     // All cursors must operate within a session, one must be made implicitly if not explicitly provided
     if (cursor[kSession] == null && cursor[kTopology].hasSessionSupport()) {
-      cursor[kSession] = cursor[kTopology].startSession({ owner: cursor, explicit: false });
+      cursor[kSession] = cursor[kTopology].startSession({
+        owner: cursor,
+        explicit: false,
+        loadBalanced: cursor.loadBalanced
+      });
     }
 
     cursor._initialize(cursor[kSession], (err, state) => {
