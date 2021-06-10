@@ -81,6 +81,7 @@ const DEBUG_FIELDS = [
   'promoteLongs',
   'promoteValues',
   'promoteBuffers',
+  'bsonRegExp',
   'servername'
 ];
 
